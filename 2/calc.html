@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Калькулятор</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400;700&family=Inter:wght@400;500;700&family=Open+Sans:ital,wght@0,400;1,300;1,400&family=Rubik:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html {
+        box-sizing: border-box;
+        font-size: 62.5%;
+        font-family: 'AR One Sans', sans-serif;
+      }
+      *,
+      *::after,
+      *::before {
+        box-sizing: inherit;
+      }
+
+      body {
+        background-color: #f3d9fa;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .calculator {
+        position: relative;
+        width: 28rem;
+        box-shadow: rgba(88, 96, 139, 0.25) 0px 40px 80px,
+          rgb(255 255 255 / 50%) 0px 0px 0px 0.5px inset;
+        border-radius: 15px;
+        transition: all 0.5s;
+      }
+
+      .calculator:hover {
+        margin-bottom: 20px;
+      }
+
+      .calc-header {
+        position: relative;
+        background-color: rgba(2, 14, 39, 0.2);
+        padding: 3rem 3rem 1.5rem 3rem;
+        text-align: right;
+        border-top-left-radius: 1.5rem;
+        border-top-right-radius: 1.5rem;
+      }
+
+      .calculator-button-wrapper button {
+        font-size: 2rem;
+      }
+
+      .calc-result {
+        font-size: 4.2rem;
+        margin-bottom: 4px;
+        font-weight: bold;
+        overflow-y: auto;
+      }
+
+      .calculator-button {
+        background-color: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+      }
+
+      .calculator-button:link,
+      .calculator-button:visited {
+        position: relative;
+        display: block;
+        font-size: 2rem;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.3s ease-in-out;
+        will-change: auto;
+        z-index: 2;
+      }
+
+      .calculator-button.equal {
+        grid-row-start: span 2;
+        grid-column-start: 4;
+      }
+
+      .calculator-button:hover,
+      .calculator-button:active .calculator-button:focus {
+        box-shadow: 0px 10px 25px rgba(4, 37, 100, 0.12);
+        cursor: pointer;
+        border-radius: 4px;
+        transform: scale(1.1);
+        border: 1px solid #fff;
+      }
+
+      .calculator-button.highlight {
+        background-color: #eebefa;
+      }
+
+      .calculator-button-wrapper {
+        padding: 15px;
+        display: grid;
+        gap: 2px;
+        grid-template-columns: repeat(4, auto);
+        grid-template-rows: repeat(5, 4.5rem);
+      }
+
+      .calc-history:link,
+      .calc-history:visited {
+        cursor: pointer;
+      }
+      .calc-history:hover,
+      .calc-history:active {
+        cursor: pointer;
+        transform: scale(1.05);
+        transition: all 0.5s;
+      }
+
+      .calc-operation-history {
+        font-size: 2rem;
+        width: 28rem;
+        height: 30rem;
+        background-color: #f8f0fc;
+        border: 1px solid #fff;
+        top: 19rem;
+        word-wrap: break-word;
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .calc-operation {
+        width: 27.8rem;
+        border: 2px solid #b197fc;
+        background-color: #d0bfff;
+        border-radius: 5px;
+        height: 5rem;
+        text-align: left;
+        padding-right: 10px;
+        word-wrap: break-word;
+      }
+
+      .show {
+        display: flex;
+      }
+
+      .calc-history {
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="calculator">
+      <header class="calc-header">
+        <div class="calc-history" id="historyBtn">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="25"
+            height="25"
+            fill="#fff"
+            viewBox="0 0 256 256"
+          >
+            <path
+              d="M136,80v43.47l36.12,21.67a8,8,0,0,1-8.24,13.72l-40-24A8,8,0,0,1,120,128V80a8,8,0,0,1,16,0Zm-8-48A95.44,95.44,0,0,0,60.08,60.15C52.81,67.51,46.35,74.59,40,82V64a8,8,0,0,0-16,0v40a8,8,0,0,0,8,8H72a8,8,0,0,0,0-16H49c7.15-8.42,14.27-16.35,22.39-24.57a80,80,0,1,1,1.66,114.75,8,8,0,1,0-11,11.64A96,96,0,1,0,128,32Z"
+            ></path>
+          </svg>
+        </div>
+        <div class="calc-result">0</div>
+      </header>
+      <div class="calculator-button-wrapper" id="calcBtnWrapper">
+        <button type="button" class="calculator-button" onclick="clearFunc()">
+          C
+        </button>
+        <button type="button" class="calculator-button" onclick="division()">
+          &divide;
+        </button>
+        <button type="button" class="calculator-button" onclick="multiple()">
+          &times;
+        </button>
+        <button
+          type="button"
+          class="calculator-button"
+          onclick="deleteLastNumber()"
+        >
+          &lArr;
+        </button>
+        <button
+          type="button"
+          class="calculator-button highlight"
+          value="7"
+          onclick="num7()"
+        >
+          7
+        </button>
+        <button
+          type="button"
+          class="calculator-button highlight"
+          value="8"
+          onclick="num8()"
+        >
+          8
+        </button>
+        <button
+          type="button"
+          class="calculator-button highlight"
+          value="9"
+          onclick="num9()"
+        >
+          9
+        </button>
+        <button type="button" class="calculator-button" onclick="minus()">
+          &minus;
+        </button>
+
+        <button
+          type="button"
+          class="calculator-button highlight"
+          value="4"
+          onclick="num4()"
+        >
+          4
+        </button>
+        <button
+          type="button"
+          class="calculator-button highlight"
+          value="5"
+          onclick="num5()"
+        >
+          5
+        </button>
+        <button
+          type="button"
+          class="calculator-button highlight"
+          value="6"
+          onclick="num6()"
+        >
+          6
+        </button>
+        <button type="button" class="calculator-button" onclick="plus()">
+          +
+        </button>
+
+        <button
+          type="button"
+          class="calculator-button highlight"
+          value="1"
+          onclick="num1()"
+        >
+          1
+        </button>
+        <button
+          type="button"
+          class="calculator-button highlight"
+          value="2"
+          onclick="num2()"
+        >
+          2
+        </button>
+        <button
+          type="button"
+          class="calculator-button highlight"
+          value="3"
+          onclick="num3()"
+        >
+          3
+        </button>
+        <button
+          type="button"
+          class="calculator-button equal"
+          onclick="equalsFunc()"
+        >
+          &equals;
+        </button>
+
+        <button
+          type="button"
+          class="calculator-button highlight"
+          onclick="allClear()"
+        >
+          AC
+        </button>
+        <button
+          type="button"
+          class="calculator-button highlight"
+          value="0"
+          onclick="num0()"
+        >
+          0
+        </button>
+        <button
+          type="button"
+          class="calculator-button highlight"
+          value="."
+          onclick="dot()"
+        >
+          .
+        </button>
+      </div>
+    </section>
+    <div class="calc-operation-history"></div>
+    <script src="./calc.js"></script>
+  </body>
+</html>
